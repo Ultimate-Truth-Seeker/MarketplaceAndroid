@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.marketplace.R
 
 @Composable
 fun ShoppingCartScreen(
@@ -121,11 +122,11 @@ fun CartItemView(
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = { onUpdateQuantity(item.quantity - 1) }) {
-                        Text("-")
+                        Text("-")  // Aquí podrías usar un ícono de decremento
                     }
                     Text(text = item.quantity.toString(), modifier = Modifier.padding(horizontal = 8.dp))
                     IconButton(onClick = { onUpdateQuantity(item.quantity + 1) }) {
-                        Text("+")
+                        Text("+")  // Aquí podrías usar un ícono de incremento
                     }
                 }
             }
@@ -139,16 +140,6 @@ fun CartItemView(
     }
 }
 
-data class Product(
-    val name: String,
-    val price: Double,
-    val imageRes: Int // Recurso de imagen
-)
-
-data class CartItem(
-    val product: Product,
-    var quantity: Int
-)
 
 fun calculateTotal(cartItems: List<CartItem>): Double {
     return cartItems.sumOf { it.product.price * it.quantity }
@@ -159,10 +150,11 @@ fun calculateTotal(cartItems: List<CartItem>): Double {
 @Composable
 fun PreviewShoppingCartScreen() {
     val sampleProducts = listOf(
-        CartItem(Product("Producto 1", 25.99, R.drawable.sample_image1), 1),
-        CartItem(Product("Producto 2", 30.50, R.drawable.sample_image2), 2),
-        CartItem(Product("Producto 3", 15.00, R.drawable.sample_image3), 1),
+        CartItem(Product("Producto 1", "Descripción del producto", 25.99, R.drawable.sample_image1), 1),
+        CartItem(Product("Producto 2", "Descripción del producto", 30.50, R.drawable.sample_image2), 2),
+        CartItem(Product("Producto 3", "Descripción del producto", 15.00, R.drawable.sample_image3), 1)
     )
+
     ShoppingCartScreen(
         products = sampleProducts,
         onRemoveProduct = {},

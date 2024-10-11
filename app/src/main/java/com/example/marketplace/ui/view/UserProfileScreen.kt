@@ -122,7 +122,7 @@ fun PreviewUserProfileScreen() {
     UserProfileScreen(
         userName = "John Doe",
         userEmail = "john.doe@example.com",
-        userProfilePic = R.drawable.sample_profile,
+        userProfilePic = R.drawable.perfil_1,
         onEditProfile = {},
         onChangePassword = {},
         onManageAddresses = {},

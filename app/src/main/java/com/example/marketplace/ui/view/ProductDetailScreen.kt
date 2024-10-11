@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.marketplace.R
 
 @Composable
 fun ProductDetailScreen(product: Product) {
@@ -117,13 +118,7 @@ fun SellerInfoSection() {
     }
 }
 
-// Modelo de datos para productos
-data class Product(
-    val name: String,
-    val description: String,
-    val price: Double,
-    val imageRes: Int // Recurso de imagen
-)
+
 
 // Preview para ver cómo se ve la pantalla
 @Preview(showBackground = true)

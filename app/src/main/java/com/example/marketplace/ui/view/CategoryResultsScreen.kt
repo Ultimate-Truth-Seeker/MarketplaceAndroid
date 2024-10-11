@@ -107,21 +107,16 @@ fun ProductItem(product: Product) {
     }
 }
 
-// Modelo de datos para productos
-data class Product(
-    val name: String,
-    val price: Double,
-    val imageRes: Int // Recurso de imagen
-)
+
 
 // Preview para ver cómo se ve la pantalla
 @Preview(showBackground = true)
 @Composable
 fun PreviewCategoryResultsScreen() {
     val sampleProducts = listOf(
-        Product("Producto 1", 25.99, R.drawable.sample_image1),
-        Product("Producto 2", 30.50, R.drawable.sample_image2),
-        Product("Producto 3", 15.00, R.drawable.sample_image3),
+        Product("Producto 1", "Descripción del producto", 25.99, R.drawable.sample_image1),
+        Product("Producto 2", "Descripción del producto", 30.50, R.drawable.sample_image2),
+        Product("Producto 3", "Descripción del producto", 15.00, R.drawable.sample_image3),
         // Agrega más productos de ejemplo
     )
     CategoryResultsScreen(categoryName = "Ropa", products = sampleProducts)
