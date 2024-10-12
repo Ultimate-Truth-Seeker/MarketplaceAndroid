@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.marketplace.R
+import com.example.marketplace.navigation.BottomNavigationMenu
 
 @Composable
 fun UserProfileScreen(
@@ -25,6 +26,8 @@ fun UserProfileScreen(
     onEditProfile: () -> Unit,
     onChangePassword: () -> Unit,
     onManageAddresses: () -> Unit,
+    onHomeClick: () -> Unit,
+    onCartClick: () -> Unit,
     onLogout: () -> Unit
 ) {
     Column(
@@ -58,6 +61,11 @@ fun UserProfileScreen(
         ) {
             Text("Log Out", color = Color.White)
         }
+        BottomNavigationMenu(
+            onHomeClick = onHomeClick,
+            onCartClick = onCartClick,
+            onProfileClick = {}
+        )
     }
 }
 
@@ -126,6 +134,8 @@ fun PreviewUserProfileScreen() {
         onEditProfile = {},
         onChangePassword = {},
         onManageAddresses = {},
+        onHomeClick = {},
+        onCartClick = {},
         onLogout = {}
     )
 }

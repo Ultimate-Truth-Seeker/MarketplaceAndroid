@@ -17,12 +17,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.marketplace.R
+import com.example.marketplace.navigation.BottomNavigationMenu
+import com.example.marketplace.ui.model.CartItem
+import com.example.marketplace.ui.model.Product
 
 @Composable
 fun ShoppingCartScreen(
     products: List<CartItem>,
     onRemoveProduct: (CartItem) -> Unit,
     onUpdateQuantity: (CartItem, Int) -> Unit,
+    onHomeClick: () -> Unit,
+    onProfileClick: () -> Unit,
     onCheckout: () -> Unit
 ) {
     var totalPrice by remember { mutableStateOf(calculateTotal(products)) }
@@ -78,6 +83,11 @@ fun ShoppingCartScreen(
         ) {
             Text("Proceed to Checkout")
         }
+        BottomNavigationMenu(
+            onHomeClick = onHomeClick,
+            onCartClick = {},
+            onProfileClick = onProfileClick
+        )
     }
 }
 
@@ -159,6 +169,8 @@ fun PreviewShoppingCartScreen() {
         products = sampleProducts,
         onRemoveProduct = {},
         onUpdateQuantity = { _, _ -> },
+        onHomeClick = {},
+        onProfileClick = {},
         onCheckout = {}
     )
 }

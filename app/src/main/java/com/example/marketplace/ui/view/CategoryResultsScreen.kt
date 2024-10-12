@@ -1,10 +1,13 @@
 package com.example.marketplace.ui.view
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,16 +18,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.example.marketplace.R
+import com.example.marketplace.ui.model.Product
 
 @Composable
-fun CategoryResultsScreen(categoryName: String, products: List<Product>) {
+fun CategoryResultsScreen(categoryName: String, products: List<Product>, goBack: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        TopBar(title = categoryName)
+        TopBar(title = categoryName, goBack
+            )
         Spacer(modifier = Modifier.height(8.dp))
         FilterSection()
         Spacer(modifier = Modifier.height(8.dp))
@@ -32,9 +38,11 @@ fun CategoryResultsScreen(categoryName: String, products: List<Product>) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(title: String) {
-    Text(
+fun TopBar(title: String, goBack: () -> Unit) {
+    TopAppBar(
+    title = {Text(
         text = title,
         fontSize = 24.sp,
         fontWeight = FontWeight.Bold,
@@ -42,7 +50,13 @@ fun TopBar(title: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-    )
+    )},
+    navigationIcon = {
+        IconButton(onClick = goBack ) {
+            Icon(imageVector = Icons.Filled.ArrowBack,
+                contentDescription = null)
+        }
+})
 }
 
 @Composable
@@ -83,7 +97,8 @@ fun ProductItem(product: Product) {
         modifier = Modifier
             .padding(8.dp)
             .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable {  },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
@@ -117,7 +132,6 @@ fun PreviewCategoryResultsScreen() {
         Product("Producto 1", "Descripción del producto", 25.99, R.drawable.sample_image1),
         Product("Producto 2", "Descripción del producto", 30.50, R.drawable.sample_image2),
         Product("Producto 3", "Descripción del producto", 15.00, R.drawable.sample_image3),
-        // Agrega más productos de ejemplo
     )
-    CategoryResultsScreen(categoryName = "Ropa", products = sampleProducts)
+    CategoryResultsScreen(categoryName = "Ropa", products = sampleProducts, {})
 }

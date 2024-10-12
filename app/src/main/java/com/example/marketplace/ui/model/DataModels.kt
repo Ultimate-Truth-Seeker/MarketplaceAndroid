@@ -1,4 +1,4 @@
-package com.example.marketplace.ui.view
+package com.example.marketplace.ui.model
 data class Product(
     val name: String,
     val description: String,

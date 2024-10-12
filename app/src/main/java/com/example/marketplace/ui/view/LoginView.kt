@@ -43,7 +43,7 @@ fun LoginScreen(
         ) {
             // Título
             Text(
-                text = "Liglin",
+                text = "Login",
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(bottom = 32.dp)
             )

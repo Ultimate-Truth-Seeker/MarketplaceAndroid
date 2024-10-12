@@ -1,8 +1,10 @@
 package com.example.marketplace.ui.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +16,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
@@ -31,7 +34,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.marketplace.navigation.BottomNavigationMenu
 
 @Composable
 fun HomeScreen(
@@ -40,7 +45,8 @@ fun HomeScreen(
     onCartClick: () -> Unit,
     onProfileClick: () -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().background(Color(0xFFF8F8F8))
+        .padding(16.dp)) {
         // Barra de búsqueda
         SearchBar(onSearch = onSearch)
 
@@ -49,9 +55,11 @@ fun HomeScreen(
 
         // Listado de productos populares
         ProductsList()
+        Spacer(modifier = Modifier.weight(1f))
 
         // Menú inferior
         BottomNavigationMenu(
+            onHomeClick = {},
             onCartClick = onCartClick,
             onProfileClick = onProfileClick
         )
@@ -95,7 +103,7 @@ fun CategoriesSection(onCategoryClick: (String) -> Unit) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    Icon(Icons.Filled.Warning, contentDescription = category)
+                    Icon(Icons.Filled.Star, contentDescription = category)
                     Text(text = category)
                 }
             }
@@ -112,7 +120,8 @@ fun ProductsList() {
             Card(
                 modifier = Modifier
                     .padding(8.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .clickable {  },
               //  elevation = 4.dp
             ) {
                 Column(
@@ -126,29 +135,3 @@ fun ProductsList() {
     }
 }
 
-@Composable
-fun BottomNavigationMenu(
-    onCartClick: () -> Unit,
-    onProfileClick: () -> Unit
-) {
-    Row {
-        NavigationBarItem(
-            icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
-            label = { Text("Home") },
-            selected = true,
-            onClick = {}
-        )
-        NavigationBarItem(
-            icon = { Icon(Icons.Filled.ShoppingCart, contentDescription = "Cart") },
-            label = { Text("Cart") },
-            selected = false,
-            onClick = onCartClick
-        )
-        NavigationBarItem(
-            icon = { Icon(Icons.Filled.Person, contentDescription = "Profile") },
-            label = { Text("Profile") },
-            selected = false,
-            onClick = onProfileClick
-        )
-    }
-}

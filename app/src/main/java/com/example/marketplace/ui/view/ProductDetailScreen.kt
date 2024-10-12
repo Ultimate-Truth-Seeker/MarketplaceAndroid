@@ -15,9 +15,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.marketplace.R
+import com.example.marketplace.ui.model.Product
 
 @Composable
-fun ProductDetailScreen(product: Product) {
+fun ProductDetailScreen(product: Product, onCartClick: () -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -28,7 +29,7 @@ fun ProductDetailScreen(product: Product) {
         item { Spacer(modifier = Modifier.height(16.dp)) }
         item { ProductInfoSection(product) }
         item { Spacer(modifier = Modifier.height(16.dp)) }
-        item { AddToCartButton() }
+        item { AddToCartButton(onCartClick) }
         item { Spacer(modifier = Modifier.height(16.dp)) }
         item { RatingsSection(product) }
         item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -77,9 +78,9 @@ fun ProductInfoSection(product: Product) {
 }
 
 @Composable
-fun AddToCartButton() {
+fun AddToCartButton(onCartClick: () -> Unit) {
     Button(
-        onClick = { /* Acción para añadir al carrito */ },
+        onClick = onCartClick,
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp)
@@ -130,5 +131,5 @@ fun PreviewProductDetailScreen() {
         price = 3399.99,
         imageRes = R.drawable.sample_image // Cambia esto por una imagen en drawable
     )
-    ProductDetailScreen(product = sampleProduct)
+    ProductDetailScreen(product = sampleProduct, {})
 }
