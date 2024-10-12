@@ -127,9 +127,9 @@ fun SellerInfoSection() {
 fun PreviewProductDetailScreen() {
     val sampleProduct = Product(
         name = "Producto de Ejemplo",
-        description = "Este es un producto de ejemplo con una descripción detallada.",
+        description = "Descripción",
         price = 3399.99,
-        imageRes = R.drawable.sample_image // Cambia esto por una imagen en drawable
+        imageRes = R.drawable.sample_image
     )
     ProductDetailScreen(product = sampleProduct, {})
 }

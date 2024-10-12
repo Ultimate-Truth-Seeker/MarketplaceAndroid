@@ -128,8 +128,8 @@ fun ProfileOptionItem(text: String, onClick: () -> Unit) {
 @Composable
 fun PreviewUserProfileScreen() {
     UserProfileScreen(
-        userName = "John Doe",
-        userEmail = "john.doe@example.com",
+        userName = "Mario Méndez ",
+        userEmail = "mario@gmail.com",
         userProfilePic = R.drawable.perfil_1,
         onEditProfile = {},
         onChangePassword = {},
