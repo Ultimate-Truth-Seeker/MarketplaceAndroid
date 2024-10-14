@@ -69,7 +69,7 @@ fun Navigation(modifier: Modifier = Modifier) {
                 price = 3399.99,
                 imageRes = R.drawable.sample_image // Cambia esto por una imagen en drawable
             )
-            ProductDetailScreen(product = sampleProduct, onCartClick = {navController.navigate("Cart")})
+            ProductDetailScreen(product = sampleProduct, onCartClick = {navController.navigate("Cart")}, onBackClick = {navController.navigate("Home")})
         }
         composable(route = "Cart") {
             ShoppingCartScreen(

@@ -18,13 +18,14 @@ import com.example.marketplace.R
 import com.example.marketplace.ui.model.Product
 
 @Composable
-fun ProductDetailScreen(product: Product, onCartClick: () -> Unit) {
+fun ProductDetailScreen(product: Product, onCartClick: () -> Unit, onBackClick: () -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFF8F8F8))
             .padding(16.dp)
     ) {
+        item { TopBar("Detalles del Producto", onBackClick)}
         item { ProductImageSection(product) }
         item { Spacer(modifier = Modifier.height(16.dp)) }
         item { ProductInfoSection(product) }
@@ -131,5 +132,5 @@ fun PreviewProductDetailScreen() {
         price = 3399.99,
         imageRes = R.drawable.sample_image
     )
-    ProductDetailScreen(product = sampleProduct, {})
+    ProductDetailScreen(product = sampleProduct, {}, {})
 }
