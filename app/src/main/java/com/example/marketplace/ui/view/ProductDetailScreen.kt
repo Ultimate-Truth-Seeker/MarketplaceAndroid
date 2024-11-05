@@ -130,6 +130,7 @@ fun PreviewProductDetailScreen() {
         name = "Producto de Ejemplo",
         description = "Descripción",
         price = 3399.99,
+        category = "",
         imageRes = R.drawable.sample_image
     )
     ProductDetailScreen(product = sampleProduct, {}, {})

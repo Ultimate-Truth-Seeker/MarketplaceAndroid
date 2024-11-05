@@ -18,12 +18,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
 import com.example.marketplace.R
 import com.example.marketplace.ui.model.Product
 
 @Composable
-fun CategoryResultsScreen(categoryName: String, products: List<Product>, goBack: () -> Unit) {
+fun CategoryResultsScreen(categoryName: String, products: List<Product>, onProductClick: (Product) -> Unit, goBack: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -34,7 +33,7 @@ fun CategoryResultsScreen(categoryName: String, products: List<Product>, goBack:
         Spacer(modifier = Modifier.height(8.dp))
         FilterSection()
         Spacer(modifier = Modifier.height(8.dp))
-        ProductGrid(products)
+        ProductGrid(products, onProductClick)
     }
 }
 
@@ -80,25 +79,25 @@ fun FilterSection() {
 }
 
 @Composable
-fun ProductGrid(products: List<Product>) {
+fun ProductGrid(products: List<Product>, onProductClick: (Product) -> Unit) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3), // Cambia según cuántos items quieras por fila
         modifier = Modifier.padding(8.dp)
     ) {
         items(products.size) { index ->
-            ProductItem(product = products[index])
+            ProductItem(product = products[index], onProductClick)
         }
     }
 }
 
 @Composable
-fun ProductItem(product: Product) {
+fun ProductItem(product: Product, onProductClick: (Product) -> Unit) {
     Column(
         modifier = Modifier
             .padding(8.dp)
             .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
             .padding(8.dp)
-            .clickable {  },
+            .clickable {onProductClick(product)  },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
@@ -129,9 +128,9 @@ fun ProductItem(product: Product) {
 @Composable
 fun PreviewCategoryResultsScreen() {
     val sampleProducts = listOf(
-        Product("Producto 1", "Descripción del producto", 25.99, R.drawable.sample_image1),
-        Product("Producto 2", "Descripción del producto", 30.50, R.drawable.sample_image2),
-        Product("Producto 3", "Descripción del producto", 15.00, R.drawable.sample_image3),
+        Product("Producto 1", "Descripción del producto", 25.99, "", R.drawable.sample_image1),
+        Product("Producto 2", "Descripción del producto", 30.50, "", R.drawable.sample_image2),
+        Product("Producto 3", "Descripción del producto", 15.00, "", R.drawable.sample_image3),
     )
-    CategoryResultsScreen(categoryName = "Ropa", products = sampleProducts, {})
+    CategoryResultsScreen(categoryName = "Ropa", products = sampleProducts, {}, {})
 }

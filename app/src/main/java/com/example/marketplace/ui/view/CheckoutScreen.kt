@@ -170,9 +170,9 @@ fun ShippingAddress(
 @Composable
 fun PreviewCheckoutScreen() {
     val sampleProducts = listOf(
-        CartItem(Product("Producto 1", "Descripción del producto", 25.99, R.drawable.sample_image1), 1),
-        CartItem(Product("Producto 2", "Descripción del producto", 30.50, R.drawable.sample_image2), 2),
-        CartItem(Product("Producto 3", "Descripción del producto", 15.00, R.drawable.sample_image3),1),
+        CartItem(Product("Producto 1", "Descripción del producto", 25.99, "", R.drawable.sample_image1), 1),
+        CartItem(Product("Producto 2", "Descripción del producto", 30.50, "", R.drawable.sample_image2), 2),
+        CartItem(Product("Producto 3", "Descripción del producto", 15.00, "", R.drawable.sample_image3),1),
     )
     CheckoutScreen(
         products = sampleProducts,

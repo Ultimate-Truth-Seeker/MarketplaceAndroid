@@ -15,14 +15,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.navigation.compose.rememberNavController
+import com.example.marketplace.MainActivity
 
+var selectedTab = 0
 @Composable
 fun BottomNavigationMenu(
     onHomeClick: () -> Unit,
     onCartClick: () -> Unit,
     onProfileClick: () -> Unit
 ) {
-    var selectedTab by remember { mutableStateOf(0) }
+    var selectedTab by remember { mutableStateOf(selectedTab) }
         NavigationBar {
             NavigationBarItem(
                 icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },

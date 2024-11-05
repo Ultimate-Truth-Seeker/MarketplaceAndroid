@@ -15,6 +15,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,9 +29,11 @@ import androidx.navigation.NavController
 @Composable
 fun LoginScreen(
     navController: NavController,
-    onLoginClick: () -> Unit,
+    onLoginClick: (String, String) -> Unit,
     onRegisterClick: () -> Unit
 ) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     // Background
     Box(
         modifier = Modifier
@@ -50,8 +56,8 @@ fun LoginScreen(
 
             // Campo de texto para correo electrónico
             OutlinedTextField(
-                value = "",
-                onValueChange = { /* Actualiza el valor del correo */ },
+                value = email,
+                onValueChange = { email = it },
                 label = { Text("Email") },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -60,8 +66,8 @@ fun LoginScreen(
 
             // Campo de texto para contraseña
             OutlinedTextField(
-                value = "",
-                onValueChange = { /* Actualiza el valor de la contraseña */ },
+                value = password,
+                onValueChange = { password = it },
                 label = { Text("Password") },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
@@ -71,7 +77,7 @@ fun LoginScreen(
 
             // Botón de Iniciar sesión
             Button(
-                onClick = onLoginClick,
+                onClick = {onLoginClick(email, password)},
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Sign Up")

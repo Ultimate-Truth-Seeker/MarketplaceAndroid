@@ -30,8 +30,8 @@ fun ShoppingCartScreen(
     onProfileClick: () -> Unit,
     onCheckout: () -> Unit
 ) {
-    var totalPrice by remember { mutableStateOf(calculateTotal(products)) }
-
+    var remainingProducts by remember { mutableStateOf<List<CartItem>>(products) }
+    var totalPrice by remember { mutableStateOf(calculateTotal(remainingProducts)) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -51,10 +51,11 @@ fun ShoppingCartScreen(
 
         // Listado de productos
         LazyColumn(modifier = Modifier.weight(1f)) {
-            items(products) { product ->
+            items(remainingProducts) { product ->
                 CartItemView(
                     item = product,
-                    onRemove = { onRemoveProduct(it) },
+                    onRemove = { onRemoveProduct(it)
+                               remainingProducts = remainingProducts.filter { item -> item!=it }},
                     onUpdateQuantity = { quantity ->
                         onUpdateQuantity(product, quantity)
                         totalPrice = calculateTotal(products)
@@ -160,9 +161,9 @@ fun calculateTotal(cartItems: List<CartItem>): Double {
 @Composable
 fun PreviewShoppingCartScreen() {
     val sampleProducts = listOf(
-        CartItem(Product("Producto 1", "Descripción del producto", 25.99, R.drawable.sample_image1), 1),
-        CartItem(Product("Producto 2", "Descripción del producto", 30.50, R.drawable.sample_image2), 2),
-        CartItem(Product("Producto 3", "Descripción del producto", 15.00, R.drawable.sample_image3), 1)
+        CartItem(Product("Producto 1", "Descripción del producto", 25.99, "", R.drawable.sample_image1), 1),
+        CartItem(Product("Producto 2", "Descripción del producto", 30.50, "", R.drawable.sample_image2), 2),
+        CartItem(Product("Producto 3", "Descripción del producto", 15.00, "", R.drawable.sample_image3), 1)
     )
 
     ShoppingCartScreen(

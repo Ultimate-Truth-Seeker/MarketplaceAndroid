@@ -36,25 +36,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.marketplace.database.AppDatabase
 import com.example.marketplace.navigation.BottomNavigationMenu
+import com.example.marketplace.ui.model.Product
 
 @Composable
 fun HomeScreen(
-    onSearch: (String) -> Unit,
     onCategoryClick: (String) -> Unit,
     onCartClick: () -> Unit,
-    onProfileClick: () -> Unit
+    onProfileClick: () -> Unit,
+    onProductClick: (Product) -> Unit
 ) {
+    var searchResults by remember { mutableStateOf<List<Product>>(ArrayList<Product>()) }
     Column(modifier = Modifier.fillMaxSize().background(Color(0xFFF8F8F8))
         .padding(16.dp)) {
         // Barra de búsqueda
-        SearchBar(onSearch = onSearch)
+        SearchBar(onSearch = {query -> searchResults = AppDatabase.searchProducts(query)})
 
         // Sección de categorías destacadas
         CategoriesSection(onCategoryClick = onCategoryClick)
 
         // Listado de productos populares
-        ProductsList()
+        ProductsList(searchResults, onProductClick)
         Spacer(modifier = Modifier.weight(1f))
 
         // Menú inferior
@@ -112,11 +115,11 @@ fun CategoriesSection(onCategoryClick: (String) -> Unit) {
 }
 
 @Composable
-fun ProductsList() {
+fun ProductsList(products: List<Product>, onProductClick: (Product) -> Unit) {
     // Aquí deberías implementar el listado de productos, usando LazyColumn o LazyVerticalGrid.
     // Este es un ejemplo básico.
     LazyColumn {
-        items(2) { index ->
+        items(products) { product ->
             Card(
                 modifier = Modifier
                     .padding(8.dp)
@@ -125,10 +128,11 @@ fun ProductsList() {
               //  elevation = 4.dp
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp).clickable { onProductClick(product) }
+
                 ) {
-                    Text(text = "Product $index")
-                    Text(text = "$${(index + 1) * 10}", style = MaterialTheme.typography.bodyMedium)
+                    Text(text = "Product ${product.name}")
+                    Text(text = "$${product.price}", style = MaterialTheme.typography.bodyMedium)
                 }
             }
         }
