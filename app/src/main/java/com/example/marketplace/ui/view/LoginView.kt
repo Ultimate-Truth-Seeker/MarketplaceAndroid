@@ -78,7 +78,8 @@ fun LoginScreen(
             // Botón de Iniciar sesión
             Button(
                 onClick = {onLoginClick(email, password)},
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
             ) {
                 Text("Sign Up")
             }
@@ -88,7 +89,7 @@ fun LoginScreen(
             // Botón de Registrarse
             Button(
                 onClick = onRegisterClick,
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Register")

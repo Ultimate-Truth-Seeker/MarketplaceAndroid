@@ -17,8 +17,11 @@ object AppDatabase {
         price = 3399.99,
                category = "Clothing" ,
         imageRes = R.drawable.sample_image // Cambia esto por una imagen en drawable
+        ),
+            Product("Teléfono", "Un lindo telefono", 100.50, "Technology", R.drawable.sample_image),
+            Product("Pizza", "Mama mía", 40.00, "Food", R.drawable.sample_image2),
+            Product("Pantalones", "lindos pantalones", 100.00, "Clothing", R.drawable.sample_image3)
     )
-        )
 
     var sampleUsers = mutableListOf(
             User("user", "email1@example.com", "password", mutableListOf()),

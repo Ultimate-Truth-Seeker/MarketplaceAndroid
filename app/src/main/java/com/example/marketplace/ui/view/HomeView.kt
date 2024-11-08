@@ -2,12 +2,15 @@ package com.example.marketplace.ui.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -26,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,26 +51,47 @@ fun HomeScreen(
     onProfileClick: () -> Unit,
     onProductClick: (Product) -> Unit
 ) {
-    var searchResults by remember { mutableStateOf<List<Product>>(ArrayList<Product>()) }
-    Column(modifier = Modifier.fillMaxSize().background(Color(0xFFF8F8F8))
-        .padding(16.dp)) {
-        // Barra de búsqueda
-        SearchBar(onSearch = {query -> searchResults = AppDatabase.searchProducts(query)})
+    var searchResults by remember { mutableStateOf<List<Product>>(AppDatabase.sampleProducts) }
 
-        // Sección de categorías destacadas
-        CategoriesSection(onCategoryClick = onCategoryClick)
-
-        // Listado de productos populares
-        ProductsList(searchResults, onProductClick)
-        Spacer(modifier = Modifier.weight(1f))
-
-        // Menú inferior
-        BottomNavigationMenu(
+    Scaffold (
+        bottomBar = {BottomNavigationMenu(
             onHomeClick = {},
             onCartClick = onCartClick,
-            onProfileClick = onProfileClick
-        )
+            onProfileClick = onProfileClick//email1@example.com
+        )},
+        modifier = Modifier.padding(16.dp).fillMaxWidth()
+    ) { innerPadding ->
+        Column (modifier = Modifier.fillMaxSize().background(Color(0xFFF8F8F8))
+            .padding(innerPadding)) {
+            // Sección de categorías destacadas
+            SearchBar(onSearch = {query -> searchResults = AppDatabase.searchProducts(query)})
+            CategoriesSection(onCategoryClick = onCategoryClick)
+            // Listado de productos populares
+            ProductsList(searchResults, onProductClick)
+
+        }
+
     }
+
+//    Column(modifier = Modifier.fillMaxSize().background(Color(0xFFF8F8F8))
+//        .padding(16.dp)) {
+//        // Barra de búsqueda
+//        SearchBar(onSearch = {query -> searchResults = AppDatabase.searchProducts(query)})
+//
+//        // Sección de categorías destacadas
+//        CategoriesSection(onCategoryClick = onCategoryClick)
+//
+//        // Listado de productos populares
+//        ProductsList(searchResults, onProductClick)
+//        Spacer(modifier = Modifier.weight(1f))
+//
+//        // Menú inferior
+//        BottomNavigationMenu(
+//            onHomeClick = {},
+//            onCartClick = onCartClick,
+//            onProfileClick = onProfileClick
+//        )
+//    }
 }
 
 @Composable
