@@ -1,6 +1,7 @@
 package com.example.marketplace.ui.model
 data class Product(
     val name: String,
+    val id: String,
     val description: String,
     val price: Double,
     val category: String,
