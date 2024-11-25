@@ -43,36 +43,46 @@ import androidx.compose.ui.unit.dp
 import com.example.marketplace.database.AppDatabase
 import com.example.marketplace.navigation.BottomNavigationMenu
 import com.example.marketplace.ui.model.Product
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.marketplace.ui.viewmodel.HomeViewModel
+
 
 @Composable
 fun HomeScreen(
     onCategoryClick: (String) -> Unit,
     onCartClick: () -> Unit,
     onProfileClick: () -> Unit,
-    onProductClick: (Product) -> Unit
+    onProductClick: (Product) -> Unit,
+    homeViewModel: HomeViewModel = viewModel()
 ) {
-    var searchResults by remember { mutableStateOf<List<Product>>(AppDatabase.sampleProducts) }
+    val searchResults by homeViewModel.searchResults.collectAsState()
 
-    Scaffold (
-        bottomBar = {BottomNavigationMenu(
-            onHomeClick = {},
-            onCartClick = onCartClick,
-            onProfileClick = onProfileClick//email1@example.com
-        )},
-        modifier = Modifier.padding(16.dp).fillMaxWidth()
+    Scaffold(
+        bottomBar = {
+            BottomNavigationMenu(
+                onHomeClick = {},
+                onCartClick = onCartClick,
+                onProfileClick = onProfileClick
+            )
+        },
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
     ) { innerPadding ->
-        Column (modifier = Modifier.fillMaxSize().background(Color(0xFFF8F8F8))
-            .padding(innerPadding)) {
-            // Sección de categorías destacadas
-            SearchBar(onSearch = {query -> searchResults = AppDatabase.searchProducts(query)})
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFF8F8F8))
+                .padding(innerPadding)
+        ) {
+            SearchBar(onSearch = { query -> homeViewModel.searchProducts(query) })
             CategoriesSection(onCategoryClick = onCategoryClick)
-            // Listado de productos populares
-            ProductsList(searchResults, onProductClick)
-
+            ProductsList(products = searchResults, onProductClick = onProductClick)
         }
-
     }
-
 //    Column(modifier = Modifier.fillMaxSize().background(Color(0xFFF8F8F8))
 //        .padding(16.dp)) {
 //        // Barra de búsqueda

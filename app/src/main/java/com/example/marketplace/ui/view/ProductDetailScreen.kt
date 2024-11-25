@@ -16,21 +16,35 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.marketplace.R
 import com.example.marketplace.ui.model.Product
+import androidx.compose.runtime.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.marketplace.ui.viewmodel.ShoppingCartViewModel
+
 
 @Composable
-fun ProductDetailScreen(product: Product, onCartClick: () -> Unit, onBackClick: () -> Unit) {
+fun ProductDetailScreen(
+    product: Product,
+    onCartClick: () -> Unit,
+    onBackClick: () -> Unit,
+    shoppingCartViewModel: ShoppingCartViewModel = viewModel()
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFF8F8F8))
             .padding(16.dp)
     ) {
-        item { TopBar("Detalles del Producto", onBackClick)}
+        item { TopBar("Detalles del Producto", onBackClick) }
         item { ProductImageSection(product) }
         item { Spacer(modifier = Modifier.height(16.dp)) }
         item { ProductInfoSection(product) }
         item { Spacer(modifier = Modifier.height(16.dp)) }
-        item { AddToCartButton(onCartClick) }
+        item {
+            AddToCartButton(onCartClick = {
+                shoppingCartViewModel.addProductToCart(product)
+                onCartClick()
+            })
+        }
         item { Spacer(modifier = Modifier.height(16.dp)) }
         item { RatingsSection(product) }
         item { Spacer(modifier = Modifier.height(16.dp)) }

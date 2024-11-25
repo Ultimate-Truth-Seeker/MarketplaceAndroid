@@ -20,18 +20,20 @@ import com.example.marketplace.R
 import com.example.marketplace.navigation.BottomNavigationMenu
 import com.example.marketplace.ui.model.CartItem
 import com.example.marketplace.ui.model.Product
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.marketplace.ui.viewmodel.ShoppingCartViewModel
+
 
 @Composable
 fun ShoppingCartScreen(
-    products: List<CartItem>,
-    onRemoveProduct: (CartItem) -> Unit,
-    onUpdateQuantity: (CartItem, Int) -> Unit,
     onHomeClick: () -> Unit,
     onProfileClick: () -> Unit,
-    onCheckout: () -> Unit
+    onCheckout: () -> Unit,
+    shoppingCartViewModel: ShoppingCartViewModel = viewModel()
 ) {
-    var remainingProducts by remember { mutableStateOf<List<CartItem>>(products) }
-    var totalPrice by remember { mutableStateOf(calculateTotal(remainingProducts)) }
+    val cartItems by shoppingCartViewModel.cartItems.collectAsState()
+    val totalPrice by remember { derivedStateOf { shoppingCartViewModel.calculateTotal() } }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -51,14 +53,12 @@ fun ShoppingCartScreen(
 
         // Listado de productos
         LazyColumn(modifier = Modifier.weight(1f)) {
-            items(remainingProducts) { product ->
+            items(cartItems) { cartItem ->
                 CartItemView(
-                    item = product,
-                    onRemove = { onRemoveProduct(it)
-                               remainingProducts = remainingProducts.filter { item -> item!=it }},
+                    item = cartItem,
+                    onRemove = { shoppingCartViewModel.removeProductFromCart(it) },
                     onUpdateQuantity = { quantity ->
-                        onUpdateQuantity(product, quantity)
-                        totalPrice = calculateTotal(products)
+                        shoppingCartViewModel.updateProductQuantity(cartItem, quantity)
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -91,7 +91,6 @@ fun ShoppingCartScreen(
         )
     }
 }
-
 @Composable
 fun CartItemView(
     item: CartItem,
@@ -111,11 +110,8 @@ fun CartItemView(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Image(
-                painter = painterResource(id = item.product.imageRes),
-                contentDescription = item.product.name,
-                modifier = Modifier.size(60.dp)
-            )
+            // Aquí puedes agregar la imagen y detalles del producto
+            // ...
 
             Spacer(modifier = Modifier.width(16.dp))
 
@@ -133,11 +129,11 @@ fun CartItemView(
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = { onUpdateQuantity(item.quantity - 1) }) {
-                        Text("-")  // Aquí podrías usar un ícono de decremento
+                        Text("-")
                     }
                     Text(text = item.quantity.toString(), modifier = Modifier.padding(horizontal = 8.dp))
                     IconButton(onClick = { onUpdateQuantity(item.quantity + 1) }) {
-                        Text("+")  // Aquí podrías usar un ícono de incremento
+                        Text("+")
                     }
                 }
             }
