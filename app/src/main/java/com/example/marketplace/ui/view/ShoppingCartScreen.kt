@@ -1,6 +1,5 @@
 package com.example.marketplace.ui.view
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,16 +10,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.marketplace.R
 import com.example.marketplace.navigation.BottomNavigationMenu
 import com.example.marketplace.ui.model.CartItem
-import com.example.marketplace.ui.model.Product
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.marketplace.ui.model.CartItemWithProduct
 import com.example.marketplace.ui.viewmodel.ShoppingCartViewModel
 
 
@@ -93,8 +89,8 @@ fun ShoppingCartScreen(
 }
 @Composable
 fun CartItemView(
-    item: CartItem,
-    onRemove: (CartItem) -> Unit,
+    item: CartItemWithProduct,
+    onRemove: (CartItemWithProduct) -> Unit,
     onUpdateQuantity: (Int) -> Unit
 ) {
     Card(
@@ -148,26 +144,4 @@ fun CartItemView(
 }
 
 
-fun calculateTotal(cartItems: List<CartItem>): Double {
-    return cartItems.sumOf { it.product.price * it.quantity }
-}
 
-// Preview para ver cómo se ve la pantalla
-@Preview(showBackground = true)
-@Composable
-fun PreviewShoppingCartScreen() {
-    val sampleProducts = listOf(
-        CartItem(Product("Producto 1", "Descripción del producto", 25.99, "", R.drawable.sample_image1), 1),
-        CartItem(Product("Producto 2", "Descripción del producto", 30.50, "", R.drawable.sample_image2), 2),
-        CartItem(Product("Producto 3", "Descripción del producto", 15.00, "", R.drawable.sample_image3), 1)
-    )
-
-    ShoppingCartScreen(
-        products = sampleProducts,
-        onRemoveProduct = {},
-        onUpdateQuantity = { _, _ -> },
-        onHomeClick = {},
-        onProfileClick = {},
-        onCheckout = {}
-    )
-}

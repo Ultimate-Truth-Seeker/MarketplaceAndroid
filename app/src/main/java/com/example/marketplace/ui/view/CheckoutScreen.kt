@@ -11,15 +11,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.marketplace.R
-import com.example.marketplace.ui.model.CartItem
-import com.example.marketplace.ui.model.Product
+import com.example.marketplace.ui.model.CartItemWithProduct
 
 
 @Composable
 fun CheckoutScreen(
-    products: List<CartItem>,
+    products: List<CartItemWithProduct>,
     totalPrice: Double,
     onConfirmPurchase: () -> Unit,
 ) {
@@ -85,7 +82,7 @@ fun CheckoutScreen(
 }
 
 @Composable
-fun ProductSummary(products: List<CartItem>, totalPrice: Double) {
+fun ProductSummary(products: List<CartItemWithProduct>, totalPrice: Double) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation()
@@ -166,17 +163,4 @@ fun ShippingAddress(
 
 
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewCheckoutScreen() {
-    val sampleProducts = listOf(
-        CartItem(Product("Producto 1", "Descripción del producto", 25.99, "", R.drawable.sample_image1), 1),
-        CartItem(Product("Producto 2", "Descripción del producto", 30.50, "", R.drawable.sample_image2), 2),
-        CartItem(Product("Producto 3", "Descripción del producto", 15.00, "", R.drawable.sample_image3),1),
-    )
-    CheckoutScreen(
-        products = sampleProducts,
-        totalPrice = 116.99,
-        onConfirmPurchase = {}
-    )
-}
+

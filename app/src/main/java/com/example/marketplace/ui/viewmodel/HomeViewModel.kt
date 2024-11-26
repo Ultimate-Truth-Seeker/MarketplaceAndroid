@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marketplace.database.AppDatabase
 import com.example.marketplace.ui.model.Product
+import com.example.marketplace.ui.repository.ProductRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -19,14 +20,18 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun loadInitialProducts() {
-        viewModelScope.launch {
-            _searchResults.value = AppDatabase.sampleProducts
+        ProductRepository().getAllProducts {
+            viewModelScope.launch {
+                _searchResults.value = it
+            }
         }
     }
 
     fun searchProducts(query: String) {
-        viewModelScope.launch {
-            _searchResults.value = AppDatabase.searchProducts(query)
+        ProductRepository().getAllProducts {
+            viewModelScope.launch {
+                _searchResults.value = it.filter { it.name.contains(query) }
+            }
         }
     }
 }

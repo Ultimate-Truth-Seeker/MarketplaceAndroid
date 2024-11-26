@@ -18,6 +18,7 @@ import com.example.marketplace.R
 import com.example.marketplace.ui.model.Product
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberAsyncImagePainter
 import com.example.marketplace.ui.viewmodel.ShoppingCartViewModel
 
 
@@ -62,7 +63,7 @@ fun ProductImageSection(product: Product) {
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = product.imageRes),
+            painter = rememberAsyncImagePainter(model = product.imageUrl),
             contentDescription = product.name,
             modifier = Modifier.fillMaxSize()
         )
@@ -136,16 +137,4 @@ fun SellerInfoSection() {
 
 
 
-// Preview para ver cómo se ve la pantalla
-@Preview(showBackground = true)
-@Composable
-fun PreviewProductDetailScreen() {
-    val sampleProduct = Product(
-        name = "Producto de Ejemplo",
-        description = "Descripción",
-        price = 3399.99,
-        category = "",
-        imageRes = R.drawable.sample_image
-    )
-    ProductDetailScreen(product = sampleProduct, {}, {})
-}
+

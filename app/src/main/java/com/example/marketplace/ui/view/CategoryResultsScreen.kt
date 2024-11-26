@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import coil.compose.rememberAsyncImagePainter
 import com.example.marketplace.R
 import com.example.marketplace.ui.model.Product
 
@@ -101,7 +102,7 @@ fun ProductItem(product: Product, onProductClick: (Product) -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = product.imageRes),
+            painter = rememberAsyncImagePainter(model = product.imageUrl),
             contentDescription = product.name,
             modifier = Modifier
                 .size(80.dp)
@@ -123,14 +124,4 @@ fun ProductItem(product: Product, onProductClick: (Product) -> Unit) {
 
 
 
-// Preview para ver cómo se ve la pantalla
-@Preview(showBackground = true)
-@Composable
-fun PreviewCategoryResultsScreen() {
-    val sampleProducts = listOf(
-        Product("Producto 1", "Descripción del producto", 25.99, "", R.drawable.sample_image1),
-        Product("Producto 2", "Descripción del producto", 30.50, "", R.drawable.sample_image2),
-        Product("Producto 3", "Descripción del producto", 15.00, "", R.drawable.sample_image3),
-    )
-    CategoryResultsScreen(categoryName = "Ropa", products = sampleProducts, {}, {})
-}
+
