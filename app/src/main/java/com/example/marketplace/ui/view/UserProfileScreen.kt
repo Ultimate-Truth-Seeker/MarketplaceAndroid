@@ -73,7 +73,7 @@ fun UserProfileScreen(
 fun ProfileHeader(userName: String, userEmail: String, userProfilePic: Int) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().padding(40.dp)
     ) {
         Image(
             painter = painterResource(id = userProfilePic),

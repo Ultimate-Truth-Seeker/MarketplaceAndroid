@@ -35,6 +35,7 @@ fun ShoppingCartScreen(
             .fillMaxSize()
             .background(Color(0xFFF8F8F8))
             .padding(16.dp)
+
     ) {
         Text(
             text = "Shopping Cart",
@@ -42,7 +43,7 @@ fun ShoppingCartScreen(
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp)
+                .padding(vertical = 40.dp)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
