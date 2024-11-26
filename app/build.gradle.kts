@@ -64,12 +64,11 @@ dependencies {
     implementation(libs.androidx.espresso.core)
     implementation(libs.google.services)
     implementation( platform(libs.firebase.bom.v3220) )// Actualiza según sea necesario
-    implementation(libs.firebase.auth) // Otras dependencias que uses de Firebase
     implementation(libs.firebase.database)
     // Agrega cualquier servicio que estés utilizando
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.firestore)
-    implementation(libs.firebase.auth.ktx)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -80,5 +79,6 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.coil.compose)
-
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 }

@@ -15,14 +15,16 @@ class ProductRepository {
             .addOnFailureListener { onComplete(false) }
     }
 
-    fun getProductById(id: String, onComplete: (Product?) -> Unit) {
+    fun getProductById(id: String, onComplete: (Product?) -> Unit): Product? {
+        var product:Product? = null
         productsCollection.document(id)
             .get()
             .addOnSuccessListener { document ->
-                val product = document.toObject(Product::class.java)
+                product = document.toObject(Product::class.java)
                 onComplete(product)
             }
             .addOnFailureListener { onComplete(null) }
+        return product
     }
 
     fun getAllProducts(onComplete: (List<Product>) -> Unit) {
@@ -48,15 +50,17 @@ class ProductRepository {
             .addOnFailureListener { onComplete(false) }
     }
 
-    fun getProductsByCategory(category: String, onComplete: (List<Product>) -> Unit) {
+    fun getProductsByCategory(category: String, onComplete: (List<Product>) -> Unit): List<Product> {
+        var products = emptyList<Product>()
         productsCollection.whereEqualTo("category", category)
             .get()
             .addOnSuccessListener { result ->
-                val products = result.mapNotNull { it.toObject(Product::class.java) }
+                products = result.mapNotNull { it.toObject(Product::class.java) }
                 onComplete(products)
             }
             .addOnFailureListener {
                 onComplete(emptyList())
             }
+        return products
     }
 }

@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.marketplace.navigation.Navigation
+import com.example.marketplace.ui.model.Product
+import com.example.marketplace.ui.repository.ProductRepository
 import com.example.marketplace.ui.theme.MarketplaceTheme
 import com.google.firebase.FirebaseApp
 

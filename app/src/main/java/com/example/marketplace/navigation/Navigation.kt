@@ -1,11 +1,16 @@
 package com.example.marketplace.navigation
 
+import android.annotation.SuppressLint
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,14 +31,23 @@ import com.example.marketplace.ui.view.ProductDetailScreen
 import com.example.marketplace.ui.view.ShoppingCartScreen
 import com.example.marketplace.ui.view.UserProfileScreen
 import com.example.marketplace.ui.view.UserRegistrationScreen
+import com.example.marketplace.ui.viewmodel.ShoppingCartViewModel
+import com.example.marketplace.ui.viewmodel.ShoppingCartViewModelFactory
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun Navigation(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     var sampleProducts = ProductRepository()
     var sampleUsers = UserRepository()
-    var sampleUser by remember { mutableStateOf<User?>(null) }
-    var sampleCartItems by remember { mutableStateOf(sampleUser?.cart) }
+    val userViewModel: UserViewModel = viewModel()
+
+    val sampleUser by userViewModel.sampleUser.observeAsState()
+
+    var sampleCartItems = userViewModel.sampleUser.observeAsState().value?.cart
+    val shoppingCartViewModel: ShoppingCartViewModel? = sampleUser?.uid?.let { userId ->
+        viewModel(factory = ShoppingCartViewModelFactory(userId))
+    }
 
     NavHost(
         navController = navController,
@@ -45,35 +59,37 @@ fun Navigation(modifier: Modifier = Modifier) {
                 navController = navController,
                 onLoginClick = { email, password ->
                     if (email != "" && password != "") {
-                        sampleUsers.signInUser(email, password) { user ->
-                            if (user != null) {
-                                sampleUsers.getUser(user.uid) { u ->
-                                    sampleUser = u
-                                }
-                                navController.navigate("Home")
-                            }
-                        }
+                        userViewModel.signIn(email, password)
+                        navController.navigate("Home")
+
+
                     }
                 },
                 onRegisterClick = {
                     navController.navigate("SignUp")
                 }
             )
+
         }
         composable(route = "SignUp") {
             UserRegistrationScreen(
                 onLoginClick = { navController.navigate("/") },
                 onRegister = { name, email, password ->
-                    val user = User(name, email, password, mutableListOf())
+                    //val user = User(name, email, password, mutableListOf())
                     sampleUsers.createUser(
                         email, password, name
                     )
-                    sampleUser = user
-                    sampleCartItems = user.cart
+                    userViewModel.signIn(email, password)
                     navController.navigate("Home")
 
                 }
             )
+            LaunchedEffect(sampleUser) {
+                if (sampleUser != null) {
+                    navController.navigate("Home")
+                    sampleCartItems = sampleUser?.cart
+                }
+            }
         }
             composable(route = "Home") {
                 HomeScreen(
@@ -92,18 +108,22 @@ fun Navigation(modifier: Modifier = Modifier) {
                 )
             }
             composable(
-                route = "Category/{categoryName}",
-                arguments = listOf(navArgument("categoryName") { type = NavType.StringType })
+                route = "Category/{category}",
+                arguments = listOf(navArgument("category") { type = NavType.StringType })
 
             ) { backStackEntry ->
-                val categoryName = backStackEntry.arguments?.getString("categoryName")
-                var products = emptyList<Product>()
-                sampleProducts.getProductsByCategory(categoryName!!) { list ->
-                    products = list
+                val category = backStackEntry.arguments?.getString("category")
+                val productsState = remember { mutableStateOf<List<Product>>(emptyList()) }
+
+                // Fetch products asynchronously
+                LaunchedEffect(category) {
+                    sampleProducts.getProductsByCategory(category!!) { products ->
+                        productsState.value = products
+                    }
                 }
                 CategoryResultsScreen(
-                    categoryName ?: "",
-                    products,
+                    category ?: "",
+                    productsState.value,
                     { product -> navController.navigate("Product/${product.id}") },
                     {
                         navController.navigate("Home")
@@ -112,27 +132,40 @@ fun Navigation(modifier: Modifier = Modifier) {
                 )
             }
             composable(
-                route = "Product/{product}",
-                arguments = listOf(navArgument("product") { type = NavType.StringType })
+                route = "Product/{id}",
+                arguments = listOf(navArgument("id") { type = NavType.StringType })
             ) { backStackEntry ->
-
-                val productid = backStackEntry.arguments?.getString("product")
-                var product = Product()
-                sampleProducts.getProductById(productid!!) { pro ->
-                    if (pro != null) {
-                        product = pro
+                val id = backStackEntry.arguments?.getString("id")
+                val productState = remember { mutableStateOf<Product?>(null) }
+                // Fetch product asynchronously
+                LaunchedEffect(id) {
+                    sampleProducts.getProductById(id!!) { product ->
+                        productState.value = product
                     }
                 }
-                ProductDetailScreen(product = product,
-                    onCartClick = {
-                        sampleUsers.addItemToCart(sampleUser!!.uid, CartItem(productid, 1)) {}
-                        navController.navigate("Cart")
-                        selectedTab = 1
-                    },
-                    onBackClick = {
-                        navController.navigate("Home")
-                        selectedTab = 0
-                    })
+
+                // Show a loading indicator while the product is null
+                if (productState.value == null) {
+                    CircularProgressIndicator()
+                } else {
+                    ProductDetailScreen(
+                        product = productState.value!!,
+                        onCartClick = {
+                            if (shoppingCartViewModel != null) {
+                                shoppingCartViewModel.addProductToCart(productState.value!!)
+                                navController.navigate("Cart")
+                                selectedTab = 1
+                            } else {
+                                navController.navigate("/")
+                            }
+                        },
+                        onBackClick = {
+                            navController.navigate("Home")
+                            selectedTab = 0
+                        },
+                        shoppingCartViewModel = shoppingCartViewModel!!
+                    )
+                }
             }
             composable(route = "Cart") {
                 ShoppingCartScreen(
@@ -145,28 +178,32 @@ fun Navigation(modifier: Modifier = Modifier) {
                         selectedTab = 0
                     },
                     onCheckout = {
-                        if (sampleUser?.cart?.isEmpty() != true) {
-                            navController.navigate("Checkout")
+                        if (shoppingCartViewModel != null) {
+                            if (shoppingCartViewModel.cartItems.value.size > 0) {
+                                navController.navigate("Checkout")
+                            }
                         }
                     },
+                    shoppingCartViewModel = shoppingCartViewModel!!
 
                     )
             }
             composable(route = "Checkout") {
-                var cartwithproducts = emptyList<CartItemWithProduct>()
-                sampleUsers.getUserCartWithProducts(sampleUser!!.uid) {
-                    cartwithproducts = it
-                }
+                var cartwithproducts = shoppingCartViewModel?.cartItems?.value
 
-                CheckoutScreen(
-                    products = cartwithproducts,
-                    totalPrice = cartwithproducts.sumOf { it.quantity * it.product.price },
-                    onConfirmPurchase = {
-                        sampleUsers.updateUserCart(sampleUser!!.uid, emptyList(), {})
-                        navController.navigate("Home")
-                        selectedTab = 0
-                    }
-                )
+                if (cartwithproducts != null) {
+                    CheckoutScreen(
+                        products = cartwithproducts,
+                        totalPrice = cartwithproducts.sumOf { it.quantity * it.product.price },
+                        onConfirmPurchase = {
+                            for (item in cartwithproducts) {
+                                shoppingCartViewModel?.removeProductFromCart(item)
+                            }
+                            navController.navigate("Home")
+                            selectedTab = 0
+                        }
+                    )
+                }
             }
             composable(route = "Profile") {
                 UserProfileScreen(
@@ -186,12 +223,13 @@ fun Navigation(modifier: Modifier = Modifier) {
                     },
                     onLogout = {
                         navController.navigate("/")
-                        sampleUser = null
+                        userViewModel.signOut()
                         selectedTab = 0
                     }
                 )
             }
         }
 }
+
 
 

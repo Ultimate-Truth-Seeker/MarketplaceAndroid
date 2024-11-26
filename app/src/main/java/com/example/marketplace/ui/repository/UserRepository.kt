@@ -6,40 +6,40 @@ import com.example.marketplace.ui.model.CartItemWithProduct
 import com.example.marketplace.ui.model.Product
 import com.example.marketplace.ui.model.User
 import com.google.android.gms.tasks.Tasks
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.util.nextAlphanumericString
+import kotlin.random.Random
 
 class UserRepository {
     private val db = AppDatabase().db
     private val usersCollection = AppDatabase().usersCollection
     private val productsCollection = AppDatabase().productsCollection
-    private val auth = AppDatabase().auth
 
     fun createUser(email: String, password: String, username: String) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnSuccessListener { authResult ->
-                val uid = authResult.user?.uid ?: ""
-                val user = User(uid, username, email, emptyList())
-                usersCollection.document(uid)
-                    .set(user)
-                    .addOnSuccessListener { println("Usuario creado exitosamente.") }
-                    .addOnFailureListener { println("Error al crear el usuario.") }
-            }
+        val uid = Random.nextAlphanumericString(10)
+        val user = User(uid, username, email, password, emptyList())
+        usersCollection.document(uid)
+            .set(user)
+            .addOnSuccessListener { println("Usuario creado exitosamente.") }
             .addOnFailureListener { println("Error al crear el usuario.") }
+
+    }
+
+    fun getAllUsers(onComplete: (List<User>) -> Unit) {
+        usersCollection.get()
+            .addOnSuccessListener { result ->
+                val users = result.mapNotNull { it.toObject(User::class.java) }
+                onComplete(users)
+            }
+            .addOnFailureListener { onComplete(emptyList()) }
     }
 
     fun signInUser(email: String, password: String, onComplete: (User?) -> Unit) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnSuccessListener { authResult ->
-                val uid = authResult.user?.uid ?: ""
-                getUser(uid) { user ->
-                    onComplete(user)
-                }
-            }
-            .addOnFailureListener {
-                onComplete(null)
-            }
+        getAllUsers { users ->
+            val user = users.find { it.email == email && it.password == password }
+            onComplete(user)
+        }
     }
 
     fun getUser(uid: String, onComplete: (User?) -> Unit) {

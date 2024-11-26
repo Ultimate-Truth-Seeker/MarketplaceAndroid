@@ -2,27 +2,41 @@
 package com.example.marketplace.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.marketplace.ui.model.CartItem
 import com.example.marketplace.ui.model.CartItemWithProduct
 import com.example.marketplace.ui.model.Product
+import com.example.marketplace.ui.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
-class ShoppingCartViewModel : ViewModel() {
+class ShoppingCartViewModel(private val userId: String) : ViewModel() {
+    private val userRepository = UserRepository()
 
     private val _cartItems = MutableStateFlow<List<CartItemWithProduct>>(emptyList())
-    val cartItems: StateFlow<List<CartItemWithProduct>> = _cartItems
+    val cartItems: StateFlow<List<CartItemWithProduct>> = _cartItems.asStateFlow()
+
+    init {
+        // Load the cart items when the ViewModel is initialized
+        loadCartItems()
+    }
+
+    private fun loadCartItems() {
+        userRepository.getUserCartWithProducts(userId) { cartItemsWithProducts ->
+            _cartItems.value = cartItemsWithProducts
+        }
+    }
 
     fun addProductToCart(product: Product) {
-        val currentItems = _cartItems.value.toMutableList()
-        val existingItem = currentItems.find { it.product.id == product.id }
-        if (existingItem != null) {
-            val updatedItem = existingItem.copy(quantity = existingItem.quantity + 1)
-            currentItems[currentItems.indexOf(existingItem)] = updatedItem
-        } else {
-            currentItems.add(CartItemWithProduct(product, 1))
+        userRepository.addItemToCart(userId, CartItem(product.id, 1)) { success ->
+            if (success) {
+                // Reload the cart items after adding a product
+                loadCartItems()
+            } else {
+                // Handle error
+            }
         }
-        _cartItems.value = currentItems
     }
 
     fun removeProductFromCart(cartItem: CartItemWithProduct) {
@@ -46,5 +60,16 @@ class ShoppingCartViewModel : ViewModel() {
 
     fun calculateTotal(): Double {
         return _cartItems.value.sumOf { it.product.price * it.quantity }
+    }
+}
+
+
+
+class ShoppingCartViewModelFactory(private val userId: String) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(ShoppingCartViewModel::class.java)) {
+            return ShoppingCartViewModel(userId) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

@@ -25,7 +25,7 @@ fun ShoppingCartScreen(
     onHomeClick: () -> Unit,
     onProfileClick: () -> Unit,
     onCheckout: () -> Unit,
-    shoppingCartViewModel: ShoppingCartViewModel = viewModel()
+    shoppingCartViewModel: ShoppingCartViewModel
 ) {
     val cartItems by shoppingCartViewModel.cartItems.collectAsState()
     val totalPrice by remember { derivedStateOf { shoppingCartViewModel.calculateTotal() } }

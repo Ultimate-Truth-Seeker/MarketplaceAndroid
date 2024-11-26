@@ -27,7 +27,7 @@ fun ProductDetailScreen(
     product: Product,
     onCartClick: () -> Unit,
     onBackClick: () -> Unit,
-    shoppingCartViewModel: ShoppingCartViewModel = viewModel()
+    shoppingCartViewModel: ShoppingCartViewModel
 ) {
     LazyColumn(
         modifier = Modifier
