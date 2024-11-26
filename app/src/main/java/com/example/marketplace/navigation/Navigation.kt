@@ -145,7 +145,7 @@ fun Navigation(modifier: Modifier = Modifier) {
                 }
 
                 // Show a loading indicator while the product is null
-                if (productState.value == null) {
+                if (productState.value == null || shoppingCartViewModel == null) {
                     CircularProgressIndicator()
                 } else {
                     ProductDetailScreen(
