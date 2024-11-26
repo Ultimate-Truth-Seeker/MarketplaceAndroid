@@ -2,11 +2,13 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services") version "4.4.2" apply true
+
 }
 
 android {
     namespace = "com.example.marketplace"
     compileSdk = 34
+
 
     defaultConfig {
         applicationId = "com.example.marketplace"
@@ -80,5 +82,6 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.coil.compose)
+
 
 }

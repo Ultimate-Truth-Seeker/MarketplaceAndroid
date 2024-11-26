@@ -34,4 +34,7 @@ class HomeViewModel : ViewModel() {
             }
         }
     }
+    fun updateProducts(products: List<Product>) {
+        _searchResults.value = products
+    }
 }
