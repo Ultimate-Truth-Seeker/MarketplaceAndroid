@@ -1,3 +1,29 @@
 <resources>
     <string name="app_name">Marketplace</string>
+    <string name="login_screen_title">Login</string>
+    <string name="signup_screen_title">Sign Up</string>
+    <string name="home_screen_title">Home</string>
+    <string name="category_results_screen_title">Category Results</string>
+    <string name="product_detail_screen_title">Product Details</string>
+    <string name="shopping_cart_screen_title">Shopping Cart</string>
+    <string name="checkout_screen_title">Checkout</string>
+    <string name="user_profile_screen_title">Profile</string>
+    <string name="email_placeholder">Email</string>
+    <string name="password_placeholder">Password</string>
+    <string name="name_placeholder">Name</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+    <string name="back_button">Back</string>
+    <string name="checkout_button">Checkout</string>
+    <string name="confirm_purchase_button">Confirm Purchase</string>
+    <string name="add_to_cart_button">Add to Cart</string>
+    <string name="remove_from_cart_button">Remove</string>
+    <string name="logout_button">Logout</string>
+    <string name="edit_profile_button">Edit Profile</string>
+    <string name="change_password_button">Change Password</string>
+    <string name="manage_addresses_button">Manage Addresses</string>
+    <string name="loading_message">Loading...</string>
+    <string name="empty_cart_message">Your cart is empty</string>
+    <string name="empty_category_message">No products found in this category</string>
+    <string name="total_price_label">Total Price:</string>
 </resources>
